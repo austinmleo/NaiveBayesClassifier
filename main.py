@@ -59,16 +59,8 @@ def compare(test, true):
 
 
 def main():
-<<<<<<< HEAD
-    files = getFilenames('./20_newsgroups/')
-
-    print files
-    print len(files)
-=======
-    
     print "Getting file names..."
     files = getFilenames('./20_newsgroups/')
->>>>>>> 516ddd07253b63ed1c5ac1dea1a97bdef3a11945
 
     allClasses = list(files.keys())
     classifier = {}
