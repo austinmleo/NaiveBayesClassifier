@@ -1,5 +1,7 @@
 import sys
 import os
+import train
+import test
 
 def getFilenames(path):
     files = {}
@@ -23,7 +25,7 @@ def stripchars(line):
     return line
 
 
-def getWordcount(filename):
+def getWordCount(filename):
     words = {}
     
     filereader = open(filename, 'r')
@@ -32,7 +34,7 @@ def getWordcount(filename):
         line = stripchars(line).split(' ')
         for word in line:
             word = word.lower()
-            if word != '':
+            if len(word) > 3:
                 if word in words:
                     words[word] += 1
                 else:
@@ -40,7 +42,6 @@ def getWordcount(filename):
 
 
 def main():
-    
     files = getFilenames('./20_newsgroups/')
 
     print files
