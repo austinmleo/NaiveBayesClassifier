@@ -37,7 +37,7 @@ def getWordCount(filename):
         line = stripchars(line).split(' ')
         for word in line:
             word = word.lower()
-            if len(word) > 3:
+            if len(word) > 10:
                 if word in words:
                     words[word] += 1
                 else:
@@ -48,12 +48,30 @@ def getWordCount(filename):
 
 def compare(test, true):
     size = len(test)
-    correct = 0
+    results = {}
+    counts = {}
+
+    overall = 0
 
     for i in range(size):
-        correct += 1 if test[i] == true[i] else 0
+        correct = 1 if test[i] == true[i] else 0
+        try:
+            results[true[i]] += correct
+        except KeyError:
+            results[true[i]] = correct
 
-    return float(correct) / size
+
+
+        try:
+            counts[true[i]] += 1
+        except KeyError:
+            counts[true[i]] = 1
+
+
+    for classification in results.keys():
+        results[classification] *= 100./counts[classification]
+
+    return results
 
 
 
@@ -68,10 +86,10 @@ def main():
     testData = []
     correctResults = []
 
-
+    print
     for classification in files:
-        print
-        print "Training class: {}...".format(classification)
+        sys.stdout.write("\x1b[KTraining class: %s    \r" % (classification))
+        sys.stdout.flush()
         breakCount = 0
         for f in files[classification]:
             wordCounts = getWordCount(f)
@@ -79,28 +97,45 @@ def main():
             if breakCount < 800:
                 classifier = train(wordCounts, classifier, classification, allClasses) 
             else:
-                if breakCount == 800:
-                    print "Tracking test data for this class..."
                 testData.append(wordCounts)
                 correctResults.append(classification)
             
             breakCount += 1
 
-
     testResults = []
 
     print
+    print "Counting totals..."
+
+    wordTotals = {}
+    for word in classifier.keys():
+        wordTotals[word] = sum(classifier[word].values())
+
+    classTotals = {}
+    for c in allClasses:
+        classTotals[c] = getClassTotal(c, classifier)
+
+    grandTotal = sum(wordTotals.values())
+
     size = len(testData)
     for i in range(size):
-        sys.stdout.write("Testing data... [%d%%]    \r" % (float(i) / size))
+        progress = 100 * float(i) / size
+        sys.stdout.write("Testing data... [%d%%]    \r" % (progress))
         sys.stdout.flush()
+
         t = testData[i]
-        testResults.append(test(t, classifier, allClasses))
+        classification, probability = test(t, classifier, allClasses, \
+                wordTotals, classTotals, grandTotal)
+        testResults.append(classification)
         
     print
     print "Analyzing results..."
-    accuracy = compare(testResults, correctResults)
-    print "Accuracy: {0:.4f}".format(accuracy)
+    results = compare(testResults, correctResults)
+
+    for classification in results.keys():
+        print "Class: {}".format(classification)
+        print "Accuracy: {0:.4f}".format(results[classification])
+        print
 
     exit()
 
