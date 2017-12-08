@@ -1,7 +1,5 @@
 import sys
 import os
-import train
-import test
 
 from train import *
 from test import *
@@ -20,7 +18,7 @@ def getFilenames(path):
 
 def stripchars(line):
     # Characters to strip
-    chars = ['.', ' ', '\n', '--', '!', '<', '>']
+    chars = ['.', ' ', '\n', '!', '<', '>', '[', ']', '@', '(', ')', '-', ':']
 
     for c in chars:
         line = line.replace(c, ' ')
