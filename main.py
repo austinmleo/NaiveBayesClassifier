@@ -60,7 +60,7 @@ def compare(test, true):
         except KeyError:
             results[true[i]] = correct
 
-
+        overall += correct
 
         try:
             counts[true[i]] += 1
@@ -71,7 +71,9 @@ def compare(test, true):
     for classification in results.keys():
         results[classification] *= 100./counts[classification]
 
-    return results
+    accuracy = (100.*overall) / size
+
+    return results, accuracy
 
 
 
@@ -130,13 +132,15 @@ def main():
         
     print
     print "Analyzing results..."
-    results = compare(testResults, correctResults)
+    print
+    results, accuracy = compare(testResults, correctResults)
 
     for classification in results.keys():
         print "Class: {}".format(classification)
         print "Accuracy: {0:.4f}".format(results[classification])
         print
 
+    print "Overall accuracy: {0:.4f}".format(accuracy) 
     exit()
 
 
