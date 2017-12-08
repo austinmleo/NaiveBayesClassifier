@@ -1,23 +1,19 @@
-def test(data, classifier, allClasses):
+def test(data, classifier, allClasses, wordTotals, classTotals, grandTotal):
     bestClass = allClasses[0]
     bestProb = 0
 
-    wordTotals = {}
-    for word in classifier.keys():
-        wordTotals[word] = sum(classifier[word].values())
-
-    grandTotal = sum(wordTotals.values())
-
     for c in allClasses:
-        classTotal = getClassTotal(c, classifier)
+        classTotal = classTotals[c]
 
         for word in data:
+            if len(word) < 11:
+                continue
             try:
                 wordTotal = wordTotals[word]
             except KeyError as e:
                 continue
 
-            prob = classifier[word][c]*(1/wordTotal)*(classTotal/grandTotal)
+            prob = classifier[word][c]*(1./wordTotal)*(float(classTotal)/grandTotal)
 
             if prob > bestProb:
                 bestProb = prob
