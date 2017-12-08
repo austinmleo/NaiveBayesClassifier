@@ -3,6 +3,9 @@ import os
 import train
 import test
 
+from train import *
+from test import *
+
 def getFilenames(path):
     files = {}
     
@@ -40,12 +43,32 @@ def getWordCount(filename):
                 else:
                     words[word] = 1
 
+    return words
+
+
+def compare(test, true):
+    size = len(test)
+    correct = 0
+
+    for i in range(size):
+        correct += 1 if test[i] == true[i] else 0
+
+    return float(correct) / size
+
+
+
 
 def main():
+<<<<<<< HEAD
     files = getFilenames('./20_newsgroups/')
 
     print files
     print len(files)
+=======
+    
+    print "Getting file names..."
+    files = getFilenames('./20_newsgroups/')
+>>>>>>> 516ddd07253b63ed1c5ac1dea1a97bdef3a11945
 
     allClasses = list(files.keys())
     classifier = {}
@@ -55,21 +78,37 @@ def main():
 
 
     for classification in files:
+        print
+        print "Training class: {}...".format(classification)
         breakCount = 0
         for f in files[classification]:
             wordCounts = getWordCount(f)
 
             if breakCount < 800:
-                classifier = train(wordCount, classifier, classification, allClasses)
+                classifier = train(wordCounts, classifier, classification, allClasses) 
             else:
+                if breakCount == 800:
+                    print "Tracking test data for this class..."
                 testData.append(wordCounts)
                 correctResults.append(classification)
             
             breakCount += 1
 
 
-    for t in testData:
-        classification = test(t)
+    testResults = []
+
+    print
+    size = len(testData)
+    for i in range(size):
+        sys.stdout.write("Testing data... [%d%%]    \r" % (float(i) / size))
+        sys.stdout.flush()
+        t = testData[i]
+        testResults.append(test(t, classifier, allClasses))
+        
+    print
+    print "Analyzing results..."
+    accuracy = compare(testResults, correctResults)
+    print "Accuracy: {0:.4f}".format(accuracy)
 
     exit()
 
