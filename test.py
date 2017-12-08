@@ -12,6 +12,8 @@ def test(data, classifier, allClasses):
         classTotal = getClassTotal(c, classifier)
 
         for word in data:
+            if len(word) < 4:
+                continue
             try:
                 wordTotal = wordTotals[word]
             except KeyError as e:
