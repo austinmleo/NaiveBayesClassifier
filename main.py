@@ -13,9 +13,25 @@ def getFilenames(path):
 def main():
     
     files = getFilenames('./20_newsgroups/')
-             
+
     print files
     print len(files)
+
+    allClasses = list(files.keys())
+    classifier = {}
+    for classification in files:
+        breakCount = 0
+        for f in files[classification]:
+            wordCounts = getWordCount(f)
+            classifier = train(wordCount, classifier, classification, allClasses)
+
+            breakCount += 1
+            if breakCount > 800:
+                break
+
+
+
+
     exit()
 
 
