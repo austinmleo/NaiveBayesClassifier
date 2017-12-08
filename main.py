@@ -5,9 +5,12 @@ def getFilenames(path):
     files = {}
     
     for r, d, f in os.walk(path):
+        filesInDir = []
         for name in f:
-            files[os.path.join(r,name)] = r
+            filesInDir.append(os.path.join(r,name))
 
+        files[r] = filesInDir
+    
     return files
 
 def stripchars(line):
@@ -21,9 +24,9 @@ def stripchars(line):
 
 
 def getWordcount(filename):
-    filereader = open(filename, 'r')
-
     words = {}
+    
+    filereader = open(filename, 'r')
 
     for line in filereader:
         line = stripchars(line).split(' ')
@@ -66,9 +69,7 @@ def main():
     for t in testData:
         classification = test(t)
 
-
-
-   
+  
     exit()
 
 
