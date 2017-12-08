@@ -42,8 +42,34 @@ def getWordcount(filename):
 def main():
     
     files = getFilenames('./20_newsgroups/')
-    
-    
+
+    print files
+    print len(files)
+
+    allClasses = list(files.keys())
+    classifier = {}
+
+    testData = []
+    correctResults = []
+
+
+    for classification in files:
+        breakCount = 0
+        for f in files[classification]:
+            wordCounts = getWordCount(f)
+
+            if breakCount < 800:
+                classifier = train(wordCount, classifier, classification, allClasses)
+            else:
+                testData.append(wordCounts)
+                correctResults.append(classification)
+            
+            breakCount += 1
+
+
+    for t in testData:
+        classification = test(t)
+
     exit()
 
 
