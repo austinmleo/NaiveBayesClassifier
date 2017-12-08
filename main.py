@@ -1,5 +1,7 @@
 import sys
 import os
+import train
+import test
 
 from train import *
 from test import *
@@ -18,7 +20,7 @@ def getFilenames(path):
 
 def stripchars(line):
     # Characters to strip
-    chars = ['.', ' ', '\n', '--', '!']
+    chars = ['.', ' ', '\n', '--', '!', '<', '>']
 
     for c in chars:
         line = line.replace(c, ' ')
@@ -35,7 +37,7 @@ def getWordCount(filename):
         line = stripchars(line).split(' ')
         for word in line:
             word = word.lower()
-            if word != '':
+            if len(word) > 3:
                 if word in words:
                     words[word] += 1
                 else:
@@ -57,7 +59,6 @@ def compare(test, true):
 
 
 def main():
-    
     print "Getting file names..."
     files = getFilenames('./20_newsgroups/')
 
@@ -101,7 +102,6 @@ def main():
     accuracy = compare(testResults, correctResults)
     print "Accuracy: {0:.4f}".format(accuracy)
 
-  
     exit()
 
 
