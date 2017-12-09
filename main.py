@@ -18,7 +18,7 @@ def getFilenames(path):
 
 def stripchars(line):
     # Characters to strip
-    chars = ['.', '\n', '!', '<', '>', '[', ']', '@', '(', ')', '-', ':', '=', '?', '*']
+    chars = ['.', '\n', '!', '<', '>', '[', ']', '(', ')', '-', ':', '=', '?', '*']
 
     for c in chars:
         line = line.replace(c, ' ')
@@ -35,7 +35,7 @@ def getWordCount(filename):
         line = stripchars(line).split(' ')
         for word in line:
             word = word.lower()
-            if len(word) > 5:
+            if len(word) > 10:
                 if word in words:
                     words[word] += 1
                 else:

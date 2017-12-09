@@ -6,7 +6,7 @@ def test(data, classifier, allClasses, wordTotals, classTotals, grandTotal):
         classTotal = classTotals[c]
 
         for word in data:
-            if len(word) < 6:
+            if len(word) < 11:
                 continue
             try:
                 wordTotal = wordTotals[word]
