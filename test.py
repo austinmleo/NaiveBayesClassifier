@@ -2,22 +2,30 @@ def test(data, classifier, allClasses, wordTotals, classTotals, grandTotal):
     bestClass = allClasses[0]
     bestProb = 0
 
+    probabilities = {}
+
     for c in allClasses:
         classTotal = classTotals[c]
 
+        prob = 1.
+
         for word in data:
-            if len(word) < 11:
-                continue
             try:
                 wordTotal = wordTotals[word]
             except KeyError as e:
                 continue
 
-            prob = classifier[word][c]*(1./wordTotal)*(float(classTotal)/grandTotal)
+            prob *= classifier[word][c]*(1./wordTotal)*(float(classTotal)/grandTotal)
 
             if prob > bestProb:
                 bestProb = prob
                 bestClass = c
+
+        probabilities[c] = prob
+
+    ranked = sorted(probabilities.iteritems(), key=lambda (k,v): (v,k), reverse=True)
+    bestClass = ranked[0][0]
+    bestProb = ranked[0][0]
 
     return bestClass, bestProb
 

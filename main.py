@@ -1,5 +1,6 @@
 import sys
 import os
+import random
 
 from train import *
 from test import *
@@ -12,7 +13,8 @@ def getFilenames(path):
         for name in f:
             filesInDir.append(os.path.join(r,name))
 
-        files[r] = filesInDir
+        if filesInDir != []:
+            files[r] = filesInDir
     
     return files
 
@@ -79,6 +81,42 @@ def compare(test, true):
 def main():
     print "Getting file names..."
     files = getFilenames('./20_newsgroups/')
+    possibleDirectories = list(files.keys())
+
+    print "Selecting directories to use..."
+
+    directoriesToUse = 20
+
+    trainingSet = {}
+    
+
+    while len(trainingSet) < directoriesToUse:
+        index = random.randint(0,len(possibleDirectories) - 1)
+        directory = possibleDirectories.pop(index)
+        trainingSet[directory] = files[directory]
+
+
+
+    useSpecifiedDirectories = True
+
+    if useSpecifiedDirectories:
+        dirs = ['comp.graphics','talk.politics.mideast']
+        dirs = ['./20_newsgroups/' + d for d in dirs]
+        trainingSet = {}
+        for d in dirs:
+            trainingSet[d] = files[d]
+
+
+
+
+
+
+    print "Directories being used: {}".format(trainingSet.keys())
+    print len(trainingSet)
+
+    files = trainingSet
+
+
 
     allClasses = list(files.keys())
     classifier = {}
