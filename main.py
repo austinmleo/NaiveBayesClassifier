@@ -35,7 +35,7 @@ def getWordCount(filename):
         line = stripchars(line).split(' ')
         for word in line:
             word = word.lower()
-            if len(word) > 9:
+            if len(word) > 5:
                 if word in words:
                     words[word] += 1
                 else:
