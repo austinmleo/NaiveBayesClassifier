@@ -18,7 +18,7 @@ def getFilenames(path):
 
 def stripchars(line):
     # Characters to strip
-    chars = ['.', ' ', '\n', '!', '<', '>', '[', ']', '@', '(', ')', '-', ':']
+    chars = ['.', '\n', '!', '<', '>', '[', ']', '@', '(', ')', '-', ':', '=', '?', '*']
 
     for c in chars:
         line = line.replace(c, ' ')
