@@ -50,30 +50,26 @@ def compare(test, true):
     counts = {}
 
     overall = 0
-    count = 0
 
     for i in range(size):
-        for c in test[i]:
-            correct = 1 if c in true[i] else 0
-            try:
-                results[c] += correct 
-            except KeyError:
-                results[c] = correct 
-            
-            overall += correct
-            count += 1
-        
-        for c in true[i]:
-            try:
-                counts[c] += 1
-            except KeyError:
-                counts[c] = 1
+        correct = 1 if test[i] == true[i] else 0
+        try:
+            results[true[i]] += correct
+        except KeyError:
+            results[true[i]] = correct
+
+        overall += correct
+
+        try:
+            counts[true[i]] += 1
+        except KeyError:
+            counts[true[i]] = 1
 
 
     for classification in results.keys():
         results[classification] *= 100./counts[classification]
 
-    accuracy = (100.*overall) / count
+    accuracy = (100.*overall) / size
 
     return results, accuracy
 
@@ -84,35 +80,25 @@ def main():
     print "Getting file names..."
     files = getFilenames('./20_newsgroups/')
 
-    allClasses = []
-    for f in files.keys():
-        classes = f.split('/')[-1].split('.')
-        for classification in classes:
-            allClasses.append(classification)
-
-    allClasses = set(allClasses)
-
+    allClasses = list(files.keys())
     classifier = {}
 
     testData = []
     correctResults = []
 
     print
-    for directory in files:
-        classifications = directory.split('/')[-1].split('.')
-        
-        sys.stdout.write("\x1b[KTraining classes: %s    \r" % (classifications))
+    for classification in files:
+        sys.stdout.write("\x1b[KTraining class: %s    \r" % (classification))
         sys.stdout.flush()
-
         breakCount = 0
-        for f in files[directory]:
+        for f in files[classification]:
             wordCounts = getWordCount(f)
 
             if breakCount < 800:
-                classifier = train(wordCounts, classifier, classifications, allClasses) 
+                classifier = train(wordCounts, classifier, classification, allClasses) 
             else:
                 testData.append(wordCounts)
-                correctResults.append(classifications)
+                correctResults.append(classification)
             
             breakCount += 1
 
@@ -138,14 +124,9 @@ def main():
         sys.stdout.flush()
 
         t = testData[i]
-        classifications = test(t, classifier, 3, allClasses, \
+        classification, probability = test(t, classifier, allClasses, \
                 wordTotals, classTotals, grandTotal)
-
-        classes = []
-        for rank in classifications:
-            classes.append(rank[0])
-
-        testResults.append(classes)
+        testResults.append(classification)
         
     print
     print "Analyzing results..."
@@ -157,8 +138,7 @@ def main():
         print "Accuracy: {0:.4f}".format(results[classification])
         print
 
-    print "Overall accuracy: {0:.4f}".format(accuracy)
-    print "Words detected: {}".format(len(classifier.keys()))
+    print "Overall accuracy: {0:.4f}".format(accuracy) 
     exit()
 
 

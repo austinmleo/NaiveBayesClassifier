@@ -1,4 +1,4 @@
-def train(data, classifier, classifications, allClasses):
+def train(data, classifier, classification, allClasses):
     for word in data:
         try:
             row = classifier[word]
@@ -6,8 +6,7 @@ def train(data, classifier, classifications, allClasses):
             row = {}
             for c in allClasses:
                 row[c] = 0
-        for c in classifications:
-            row[c] += data[word]
+        row[classification] += data[word]
         classifier[word] = row
 
     return classifier
